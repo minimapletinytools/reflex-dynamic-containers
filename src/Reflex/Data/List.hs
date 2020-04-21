@@ -24,8 +24,8 @@ import           Data.List.Index
 -- 'Reflex.Data.Stack'?
 data DynamicList t a = DynamicList {
   -- TODO rename to added/removed
-  _dynamicList_add        :: Event t (Int, a)
-  , _dynamicList_remove   :: Event t a
+  _dynamicList_added        :: Event t (Int, a)
+  , _dynamicList_removed   :: Event t a
   , _dynamicList_contents :: Dynamic t [a]
 }
 
@@ -132,7 +132,7 @@ holdDynamicList initial (DynamicListConfig {..}) = mdo
 
       dlc = fmap snd dynInt
 
-  return $ DynamicList { _dynamicList_add      = fmapMaybe evAddSelect evInt
-                       , _dynamicList_remove   = fmapMaybe evRemoveSelect evInt
+  return $ DynamicList { _dynamicList_added    = fmapMaybe evAddSelect evInt
+                       , _dynamicList_removed  = fmapMaybe evRemoveSelect evInt
                        , _dynamicList_contents = dlc
                        }

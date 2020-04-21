@@ -15,7 +15,7 @@ import qualified Data.List                as L (last)
 import           Reflex
 import           Reflex.Data.ActionStack
 import           Reflex.Potato.Helpers
-import           Reflex.Test.App
+import           Reflex.Test.Host
 
 data TestCmd a = TCDo a | TCUndo | TCRedo | TCClear deriving (Eq, Show)
 

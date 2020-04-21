@@ -18,7 +18,7 @@ import qualified Data.List                     as L
 
 import           Reflex
 import           Reflex.Data.List
-import           Reflex.Test.App
+import           Reflex.Test.Host
 
 pushAdd_network
   :: forall t m

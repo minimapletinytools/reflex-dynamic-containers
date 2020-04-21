@@ -16,7 +16,7 @@ import qualified Data.List                     as L
 
 import           Reflex
 import           Reflex.Data.Directory
-import           Reflex.Test.App
+import           Reflex.Test.Host
 
 
 

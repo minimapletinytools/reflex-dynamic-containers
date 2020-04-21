@@ -20,7 +20,7 @@ import           Data.Sequence
 import           Reflex
 import           Reflex.Data.Sequence
 
-import           Reflex.Test.App
+import           Reflex.Test.Host
 
 data SeqCmd a = SCInsert (Int, [a]) | SCRemove (Int, Int) | SCClear deriving (Eq, Show)
 

@@ -1,3 +1,15 @@
+-----------------------------------------------------------------------------
+-- |
+-- Copyright   :  (C) 2020 Peter Lu
+-- License     :  see the file LICENSE
+--
+-- Maintainer  :  pdlla <chippermonky@gmail.com>
+-- Stability   :  experimental
+-- Portability :  non-portable
+--
+-- A dynamic seq which are a set of input and output events that wrap an
+-- internal 'Dynamic (Seq a)'.
+----------------------------------------------------------------------------
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE RecursiveDo     #-}
 
@@ -24,10 +36,6 @@ import           Data.Wedge
 
 
 -- TODO make a simple variant of this that only supports adding one at a time
-
--- | Dynamic variant of Seq
--- the interface is modified to support adding/removing several elements at once
--- this is to avoid needing to use 'runWithReplace' to do this in one event tick
 data DynamicSeq t a = DynamicSeq {
   -- | index and sub sequence that was just added
   _dynamicSeq_inserted   :: Event t (Int, Seq a)
@@ -40,6 +48,8 @@ data DynamicSeq t a = DynamicSeq {
   , _dynamicSeq_contents :: Dynamic t (Seq a)
 }
 
+-- | The interface only supports adding and removing several consecutive
+-- elements. Use with 'singleton x' to add single elements.
 data DynamicSeqConfig t a = DynamicSeqConfig {
   -- | index and sub sequence to add
   _dynamicSeqConfig_insert   :: Event t (Int, Seq a)

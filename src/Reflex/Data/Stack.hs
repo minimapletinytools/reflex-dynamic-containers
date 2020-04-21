@@ -1,5 +1,16 @@
+-----------------------------------------------------------------------------
+-- |
+-- Copyright   :  (C) 2020 Peter Lu
+-- License     :  see the file LICENSE
+--
+-- Maintainer  :  pdlla <chippermonky@gmail.com>
+-- Stability   :  experimental
+-- Portability :  non-portable
+--
+-- A dynamic stack
+----------------------------------------------------------------------------
+
 {-# LANGUAGE RecordWildCards #-}
---{-# LANGUAGE RecursiveDo     #-}
 
 module Reflex.Data.Stack
   ( DynamicStack(..)

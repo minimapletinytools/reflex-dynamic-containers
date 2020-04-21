@@ -1,3 +1,17 @@
+-----------------------------------------------------------------------------
+-- |
+-- Copyright   :  (C) 2020 Peter Lu
+-- License     :  see the file LICENSE
+--
+-- Maintainer  :  pdlla <chippermonky@gmail.com>
+-- Stability   :  experimental
+-- Portability :  non-portable
+--
+-- A dynamic structure intended for modelling action stacks for undo/redo.
+-- Internally, it is represented as two stacks: "done" and "undone".
+-- Redo/undo moves the top element from one stack to another.
+-- New do events add elements to the "done" stack and clears the "undone" stack.
+----------------------------------------------------------------------------
 {-# LANGUAGE RecordWildCards #-}
 
 module Reflex.Data.ActionStack
@@ -20,10 +34,6 @@ import qualified Data.Dependent.Sum            as DS
 import qualified Data.GADT.Compare
 import           Data.Wedge
 
--- | a dynamic structure intended for modelling action stacks for undo/redo
--- internally, it is represented as two stacks: "done" and "undone"
--- redo/undo moves the top element from one stack to another
--- new do events add elements to the "done" stack and clears the "undone" stack
 data ActionStack t a = ActionStack {
   _actionStack_do            :: Event t a -- ^ fires when element is added to do stack
   , _actionStack_undo        :: Event t a -- ^ fires when element is added to undo stack

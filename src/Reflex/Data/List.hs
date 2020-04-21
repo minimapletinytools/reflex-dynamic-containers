@@ -1,3 +1,17 @@
+-----------------------------------------------------------------------------
+-- |
+-- Copyright   :  (C) 2020 Peter Lu
+-- License     :  see the file LICENSE
+--
+-- Maintainer  :  pdlla <chippermonky@gmail.com>
+-- Stability   :  experimental
+-- Portability :  non-portable
+--
+-- A dynamic list which are a set of input and output events that wrap an
+-- internal 'Dynamic [a]'. Just like haskell lists, DynamicList is probably not
+-- what you want. Perhaps you are looking for 'Reflex.Data.Sequence' or
+-- 'Reflex.Data.Stack'?
+----------------------------------------------------------------------------
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE RecursiveDo     #-}
 
@@ -18,10 +32,6 @@ import           Control.Monad.Fix
 
 import           Data.List.Index
 
--- | A dynamic list which are a set of input and output events that wrap an
--- internal 'Dynamic [a]'. Just like haskell lists, DynamicList is probably not
--- what you want. Perhaps you are looking for 'Reflex.Data.Sequence' or
--- 'Reflex.Data.Stack'?
 data DynamicList t a = DynamicList {
   -- TODO rename to added/removed
   _dynamicList_added        :: Event t (Int, a)

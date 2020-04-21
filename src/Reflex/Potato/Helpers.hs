@@ -1,11 +1,17 @@
--- random helper methods
--- I only copied over the ones I needed here, if you find any of these useful and want more please see https://github.com/pdlla/potato-flow
+-- |
+-- random helper methods, nothing to see here
+-- the only reason this is exposed is so I can use this in tests
+-- if you find any of these useful and want more please see the same file in https://github.com/pdlla/potato-flow
 {-# LANGUAGE RecursiveDo #-}
 
 module Reflex.Potato.Helpers
   ( leftmostwarn
   , fanDSum
   , foldDynMergeWith
+  , getLeft
+  , getRight
+  , getHere
+  , getThere
   )
 where
 
@@ -17,7 +23,8 @@ import           Control.Monad.Fix
 
 import qualified Data.Dependent.Map            as DM
 import qualified Data.Dependent.Sum            as DS
-import           Data.These
+import           Data.Wedge
+
 
 
 -- TODO rename leftmostWarn
@@ -49,3 +56,26 @@ foldDynMergeWith
   -> [Event t (b -> b)]  -- ^ list of events producing a reducing method
   -> m (Dynamic t b)  -- ^ final output after all folding methods applied
 foldDynMergeWith acc = foldDyn ($) acc . mergeWith (.)
+
+
+
+
+getLeft :: Either a b -> Maybe a
+getLeft (Left x) = Just x
+getLeft _        = Nothing
+
+getRight :: Either a b -> Maybe b
+getRight (Right x) = Just x
+getRight _         = Nothing
+
+
+-- my additions
+getHere :: Wedge a b -> Maybe a
+getHere c = case c of
+  Here x -> Just x
+  _      -> Nothing
+
+getThere :: Wedge a b -> Maybe b
+getThere c = case c of
+  There x -> Just x
+  _       -> Nothing

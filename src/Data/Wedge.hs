@@ -1,6 +1,6 @@
+-- |
 -- copied from smash-0.1.1.0 to resolve a dependency issue
 -- reflex-platform doesn't seem to understand extra-deps from stack.yaml
--- note I did add 'getHere' and 'getThere'
 -- TODO fix the dependency issue so you can remove this
 
 {-# LANGUAGE CPP                #-}
@@ -59,10 +59,6 @@ module Data.Wedge
 , reassocRL
   -- ** Symmetry
 , swapWedge
-
-  -- ** my additions
-, getHere
-, getThere
 ) where
 
 import           Prelude
@@ -454,16 +450,3 @@ instance Bitraversable Wedge where
     Nowhere -> pure Nowhere
     Here a -> Here <$> f a
     There b -> There <$> g b
-
-
-
--- my additions
-getHere :: Wedge a b -> Maybe a
-getHere c = case c of
-  Here x -> Just x
-  _      -> Nothing
-
-getThere :: Wedge a b -> Maybe b
-getThere c = case c of
-  There x -> Just x
-  _       -> Nothing

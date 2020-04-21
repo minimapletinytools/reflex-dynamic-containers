@@ -1,0 +1,107 @@
+name:                reflex-dynamic-containers
+version:             0.1.0.0
+github:              "pdlla/reflex-dynamic-containers"
+license:             BSD3
+author:              "pdlla"
+maintainer:          "chippermonky@gmail.com"
+copyright:           "2020 Peter Lu"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/pdlla/reflex-dynamic-containers#readme>
+
+ghc-options:
+- -Wall
+- -Wcompat
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wredundant-constraints
+#- -Werror
+
+default-extensions:
+- ApplicativeDo
+- BangPatterns
+- DataKinds
+- ConstraintKinds
+- DeriveFoldable
+- DeriveFunctor
+- DeriveTraversable
+- DeriveGeneric
+- DeriveLift
+- DeriveTraversable
+- DerivingStrategies
+- EmptyCase
+- ExistentialQuantification
+- FlexibleContexts
+- FlexibleInstances
+- FunctionalDependencies
+- GADTs
+- GeneralizedNewtypeDeriving
+- InstanceSigs
+- KindSignatures
+- LambdaCase
+- MultiParamTypeClasses
+- MultiWayIf
+- NamedFieldPuns
+- OverloadedStrings
+- PatternSynonyms
+- RankNTypes
+- ScopedTypeVariables
+- StandaloneDeriving
+- TupleSections
+- TypeApplications
+- TypeFamilies
+- TypeFamilyDependencies
+- TypeOperators
+- NoImplicitPrelude
+
+dependencies:
+- base >= 4.7 && < 5
+- reflex
+- relude
+- deepseq
+- binary
+- hashable
+- these
+- containers
+- dependent-map
+- dependent-sum
+- ilist
+- reflex-test-host
+
+library:
+  source-dirs: src
+
+#executables:
+#  reflex-dynamic-containers-exe:
+#    main:                Main.hs
+#    source-dirs:         app
+#    ghc-options:
+#    - -threaded
+#    - -rtsopts
+#    - -with-rtsopts=-N
+#    dependencies:
+#    - reflex-dynamic-containers
+
+tests:
+  reflex-dynamic-containers-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - reflex-dynamic-containers
+    - HUnit
+    - hspec
+    - hspec-contrib

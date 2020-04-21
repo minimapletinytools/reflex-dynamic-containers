@@ -80,6 +80,13 @@ dependencies:
 
 library:
   source-dirs: src
+  exposed-modules:
+    - Reflex.Data.ActionStack
+    - Reflex.Data.Directory
+    - Reflex.Data.List
+    - Reflex.Data.Sequence
+    - Reflex.Data.Stack
+    - Reflex.Potato.Helpers
 
 #executables:
 #  reflex-dynamic-containers-exe:

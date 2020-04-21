@@ -54,6 +54,21 @@ data DynamicListConfig t a = DynamicListConfig {
   , _dynamicListConfig_dequeue :: Event t ()
 }
 
+-- this is available since relude 0.6.0.0 as !!?
+-- but nix/cabal can't seem to download 0.6.0.0 so I just do this instead
+infix 9 !!!?
+(!!!?) :: [a] -> Int -> Maybe a
+(!!!?) xs i
+    | i < 0     = Nothing
+    | otherwise = go i xs
+  where
+    go :: Int -> [a] -> Maybe a
+    go 0 (x:_)  = Just x
+    go j (_:ys) = go (j - 1) ys
+    go _ []     = Nothing
+{-# INLINE (!!!?) #-}
+
+
 -- TODO switch to Data.Default
 defaultDynamicListConfig :: (Reflex t) => DynamicListConfig t a
 defaultDynamicListConfig = DynamicListConfig
@@ -117,7 +132,7 @@ holdDynamicList initial (DynamicListConfig {..}) = mdo
               xs' <- add' (index, x) xs
               return $ (LSInserted (index, x), xs')
             remove' index = do
-              x <- xs !!? index
+              x <- xs !!!? index
               return $ (x, deleteAt index xs)
             remove :: Int -> Maybe (LState a, [a])
             remove index = do

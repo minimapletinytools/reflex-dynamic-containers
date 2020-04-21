@@ -3,15 +3,7 @@
 -- reflex-platform doesn't seem to understand extra-deps from stack.yaml
 -- TODO fix the dependency issue so you can remove this
 
-{-# LANGUAGE CPP                #-}
-{-# LANGUAGE DeriveAnyClass     #-}
-{-# LANGUAGE DeriveDataTypeable #-}
-{-# LANGUAGE DeriveGeneric      #-}
-{-# LANGUAGE LambdaCase         #-}
-{-# LANGUAGE RankNTypes         #-}
-{-# LANGUAGE TupleSections      #-}
-{-# LANGUAGE TypeApplications   #-}
--- |
+
 -- Module       : Data.Wedge
 -- Copyright    : (c) 2020 Emily Pillmore
 -- License      : BSD-3-Clause
@@ -23,6 +15,16 @@
 -- This module contains the definition for the 'Wedge' datatype. In
 -- practice, this type is isomorphic to 'Maybe (Either a b)' - the type with
 -- two possibly non-exclusive values and an empty case.
+
+{-# LANGUAGE CPP                #-}
+{-# LANGUAGE DeriveAnyClass     #-}
+{-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DeriveGeneric      #-}
+{-# LANGUAGE LambdaCase         #-}
+{-# LANGUAGE RankNTypes         #-}
+{-# LANGUAGE TupleSections      #-}
+{-# LANGUAGE TypeApplications   #-}
+
 module Data.Wedge
 ( -- * Datatypes
   -- $general

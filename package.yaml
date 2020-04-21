@@ -86,7 +86,6 @@ library:
     - Reflex.Data.List
     - Reflex.Data.Sequence
     - Reflex.Data.Stack
-    - Reflex.Potato.Helpers
 
 #executables:
 #  reflex-dynamic-containers-exe:

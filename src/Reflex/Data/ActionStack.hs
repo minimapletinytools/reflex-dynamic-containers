@@ -37,7 +37,11 @@ import           Data.Wedge
 data ActionStack t a = ActionStack {
   _actionStack_do            :: Event t a -- ^ fires when element is added to do stack
   , _actionStack_undo        :: Event t a -- ^ fires when element is added to undo stack
+
+  -- TODO this is misleading as only the undone stack gets cleared, not the done stack
+  -- TODO change it so it's only when undone gets cleared or remove this event all together
   , _actionStack_clear       :: Event t () -- ^ fires when action stack is cleared either due to a new do action or clear event
+
   -- probably don't want to expose these?
   --, _actionStack_doneStack   :: Dynamic t [a] -- ^ stack of actions we've done
   --, _actionStack_undoneStack :: Dynamic t [a] -- ^ stack of actions we've undone

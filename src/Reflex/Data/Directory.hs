@@ -27,15 +27,16 @@ import           Relude
 
 import           Control.Monad.Fix
 
-import qualified Data.List.NonEmpty            as NE
-import qualified Data.Map                      as M
+import qualified Data.IntMap.Strict as IM
+import qualified Data.List.NonEmpty as NE
 import           Data.These
 
 import           Reflex
 
 
+
 -- TODO change this to enum type class
-type DirId = Int
+type DirId = IM.Key
 
 data DirectoryIdAssigner t v  = DirectoryIdAssigner {
   -- | tag an event with ided elements that got generate by the event
@@ -73,7 +74,7 @@ holdDirectoryIdAssigner DirectoryIdAssignerConfig {..} = do
 
 
 data Directory t v = Directory {
-  _directoryMap_contents  :: Behavior t (Map DirId v)
+  _directoryMap_contents  :: Behavior t (IM.IntMap v)
   , _directoryMap_added   :: Event t (NonEmpty (DirId, v))
   , _directoryMap_removed :: Event t (NonEmpty (DirId, v))
 }
@@ -98,24 +99,24 @@ holdDirectory DirectoryConfig {..} = mdo
     -- lookup each element we are about to remove
     removed = fmap
       (\(m, els) ->
-        catMaybes . toList . fmap (\i -> (\x -> (i, x)) <$> M.lookup i m) $ els
+        catMaybes . toList . fmap (\i -> (\x -> (i, x)) <$> IM.lookup i m) $ els
       )
       (attach bDirectory _directoryMapConfig_remove)
     -- setup the directory
     addAndRemove :: Event t (These (NonEmpty (DirId, v)) (NonEmpty DirId))
     addAndRemove = alignEventWithMaybe Just add _directoryMapConfig_remove
-    addToMap els m = foldl' (\accm (i, e) -> M.insert i e accm) m els
-    removeFromMap els m = foldl' (\accm i -> M.delete i accm) m els
+    addToMap els m = foldl' (\accm (i, e) -> IM.insert i e accm) m els
+    removeFromMap els m = foldl' (\accm i -> IM.delete i accm) m els
     foldfn
       :: These (NonEmpty (DirId, v)) (NonEmpty DirId)
-      -> Map DirId v
-      -> Map DirId v
+      -> IM.IntMap v
+      -> IM.IntMap v
     foldfn (This els) m = addToMap els m
     foldfn (That els) m = removeFromMap els m
     foldfn (These elsadd elsremove) m =
       addToMap elsadd . removeFromMap elsremove $ m
     bDirectory = current directory
-  directory :: Dynamic t (Map DirId v) <- foldDyn foldfn M.empty addAndRemove
+  directory :: Dynamic t (IM.IntMap v) <- foldDyn foldfn IM.empty addAndRemove
   return Directory { _directoryMap_contents = bDirectory
                    , _directoryMap_added    = add
                    , _directoryMap_removed  = fmapMaybe nonEmpty removed

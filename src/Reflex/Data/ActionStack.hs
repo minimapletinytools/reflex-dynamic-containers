@@ -40,7 +40,7 @@ data ActionStack t a = ActionStack {
 
   -- TODO this is misleading as only the undone stack gets cleared, not the done stack
   -- TODO change it so it's only when undone gets cleared or remove this event all together
-  , _actionStack_clear       :: Event t () -- ^ fires when action stack is cleared either due to a new do action or clear event
+  --, _actionStack_clear       :: Event t () -- ^ fires when action stack is cleared either due to a new do action or clear event
 
   -- probably don't want to expose these?
   --, _actionStack_doneStack   :: Dynamic t [a] -- ^ stack of actions we've done
@@ -109,11 +109,12 @@ holdActionStack (ActionStackConfig {..}) = do
   let changedEv :: Event t (Wedge a a)
       changedEv = fmap (\(x, _, _) -> x) (updated asdyn)
 
-  return $ ActionStack
-    { _actionStack_do    = fmapMaybe getHere changedEv
-    , _actionStack_undo  = fmapMaybe getThere changedEv
-    , _actionStack_clear = leftmost
-      [void _actionStackConfig_do, _actionStackConfig_clear]
-      --, _actionStack_doneStack = fmap (\(_,x,_)->x) asdyn
-      --, _actionStack_undoneStack = fmap (\(_,_,x)->x) asdyn
-    }
+  return $ ActionStack { _actionStack_do   = fmapMaybe getHere changedEv
+                       , _actionStack_undo = fmapMaybe getThere changedEv
+    -- see comments in ActionStack definition above
+    --, _actionStack_clear = leftmost [void _actionStackConfig_do, _actionStackConfig_clear]
+
+    -- just delete these
+    --, _actionStack_doneStack = fmap (\(_,x,_)->x) asdyn
+    --, _actionStack_undoneStack = fmap (\(_,_,x)->x) asdyn
+                       }

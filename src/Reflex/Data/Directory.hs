@@ -8,6 +8,7 @@
 -- Portability :  non-portable
 --
 -- Structures for dynamically creating ids and tracking id'd objects
+-- TODO remove this module from here, it's too specific
 ----------------------------------------------------------------------------
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE RecursiveDo     #-}
@@ -27,11 +28,12 @@ import           Relude
 
 import           Control.Monad.Fix
 
-import qualified Data.IntMap.Strict as IM
-import qualified Data.List.NonEmpty as NE
+import qualified Data.IntMap.Strict    as IM
+import qualified Data.List.NonEmpty    as NE
 import           Data.These
 
 import           Reflex
+import           Reflex.Potato.Helpers
 
 
 
@@ -73,19 +75,34 @@ holdDirectoryIdAssigner DirectoryIdAssignerConfig {..} = do
                                _directoryIdAssigner_tag = maketag }
 
 
+
+-- TODO implement this using DynamicIntMap (once you create it)
+-- | this is bassically a DynamicIntMap with a restricted interface
 data Directory t v = Directory {
   _directoryMap_contents  :: Behavior t (IM.IntMap v)
   , _directoryMap_added   :: Event t (NonEmpty (DirId, v))
   , _directoryMap_removed :: Event t (NonEmpty (DirId, v))
+
+  -- TODO
+  --, _directoryMap_modified :: Event t (NonEmpty (DirId, v, v))
 }
 
 data DirectoryConfig t v = DirectoryConfig {
   -- | add a element to the directory
   -- ensure the DirId was assigned from the same instance of DirectoryIdAssigner
-  _directoryMapConfig_add      :: Event t (NonEmpty (DirId, v))
+  _directoryMapConfig_add          :: Event t (NonEmpty (DirId, v))
   -- | remove an element from the map
-  , _directoryMapConfig_remove :: Event t (NonEmpty DirId)
+  , _directoryMapConfig_remove     :: Event t (NonEmpty DirId)
+
+  -- TODO
+  , _directoryMapConfig_modifyWith :: Event t (NonEmpty (DirId, v->v))
 }
+
+
+
+-- helper type for holdActionStack
+data DCmd v = DCAdd (NonEmpty (DirId, v)) | DCRemove (NonEmpty DirId) | DCModify (NonEmpty (DirId, v->v))
+
 
 holdDirectory
   :: forall t m v
@@ -93,31 +110,34 @@ holdDirectory
   => DirectoryConfig t v
   -> m (Directory t v)
 holdDirectory DirectoryConfig {..} = mdo
+
+--_directoryMapConfig_modifyWith :: Event t (NonEmpty (DirId, v->v))
   let
-    add :: Event t (NonEmpty (DirId, v))
-    add     = _directoryMapConfig_add
     -- lookup each element we are about to remove
     removed = fmap
       (\(m, els) ->
         catMaybes . toList . fmap (\i -> (\x -> (i, x)) <$> IM.lookup i m) $ els
       )
       (attach bDirectory _directoryMapConfig_remove)
+    allEvs = leftmostwarn "Directory" [
+      fmap DCAdd _directoryMapConfig_add
+      , fmap DCRemove _directoryMapConfig_remove
+      , fmap DCModify _directoryMapConfig_modifyWith]
+
     -- setup the directory
-    addAndRemove :: Event t (These (NonEmpty (DirId, v)) (NonEmpty DirId))
-    addAndRemove = alignEventWithMaybe Just add _directoryMapConfig_remove
     addToMap els m = foldl' (\accm (i, e) -> IM.insert i e accm) m els
     removeFromMap els m = foldl' (\accm i -> IM.delete i accm) m els
-    foldfn
-      :: These (NonEmpty (DirId, v)) (NonEmpty DirId)
-      -> IM.IntMap v
-      -> IM.IntMap v
-    foldfn (This els) m = addToMap els m
-    foldfn (That els) m = removeFromMap els m
-    foldfn (These elsadd elsremove) m =
-      addToMap elsadd . removeFromMap elsremove $ m
+    modifyInMap els m = foldl' (\accm (i, f) -> IM.adjust f i accm) m els
+
+    foldfn :: DCmd v -> IM.IntMap v -> IM.IntMap v
+    foldfn (DCAdd els) m    = addToMap els m
+    foldfn (DCRemove els) m = removeFromMap els m
+    foldfn (DCModify els) m = modifyInMap els m
+
     bDirectory = current directory
-  directory :: Dynamic t (IM.IntMap v) <- foldDyn foldfn IM.empty addAndRemove
+
+  directory :: Dynamic t (IM.IntMap v) <- foldDyn foldfn IM.empty allEvs
   return Directory { _directoryMap_contents = bDirectory
-                   , _directoryMap_added    = add
+                   , _directoryMap_added    = _directoryMapConfig_add
                    , _directoryMap_removed  = fmapMaybe nonEmpty removed
                    }

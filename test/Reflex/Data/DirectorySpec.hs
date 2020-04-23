@@ -8,11 +8,10 @@ where
 import           Relude
 
 import           Test.Hspec
-import           Test.Hspec.Contrib.HUnit       ( fromHUnitTest )
+import           Test.Hspec.Contrib.HUnit (fromHUnitTest)
 import           Test.HUnit
 
-import qualified Data.List                     as L
-                                                ( last )
+import qualified Data.List                as L (last)
 
 import           Reflex
 import           Reflex.Data.Directory
@@ -34,6 +33,7 @@ basic_network ev = do
       -- TODO test more stuff
       dmc          = DirectoryConfig { _directoryMapConfig_add    = idAssignedEv
                                      , _directoryMapConfig_remove = never
+                                     , _directoryMapConfig_modifyWith = never
                                      }
   dm <- holdDirectory dmc
 

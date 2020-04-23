@@ -17,7 +17,26 @@ import           Reflex
 import           Reflex.Data.Directory
 import           Reflex.Test.Host
 
+{- TODO add better test cases
+import qualified Text.Show
 
+data TestCmd a = TCAdd a | TCRemove DirId | TCModify (DirId, a -> a)
+
+instance (Show a) => Show (TestCmd a) where
+  show (TCAdd (i,a))    = "TCAdd " <> show i <> " " <> show a
+  show (TCRemove i)     = "TCRemove " <> show i
+  show (TCModify (i,_)) = "TCModify " <> show i
+
+  let addEv = flip fmapMaybe ev $ \case
+        TCAdd x -> Just x
+        _      -> Nothing
+      removeEv = flip fmapMaybe ev $ \case
+        TCRemove x -> Just x
+        _      -> Nothing
+      modifyEv = flip fmapMaybe ev $ \case
+        TCModify x -> Just x
+        _      -> Nothing
+-}
 
 basic_network
   :: forall t m

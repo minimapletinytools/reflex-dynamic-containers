@@ -79,20 +79,20 @@ holdDirectoryIdAssigner DirectoryIdAssignerConfig {..} = do
 -- TODO implement this using DynamicIntMap (once you create it)
 -- | this is bassically a DynamicIntMap with a restricted interface
 data Directory t v = Directory {
-  _directoryMap_contents   :: Behavior t (IM.IntMap v)
-  , _directoryMap_added    :: Event t (NonEmpty (DirId, v))
-  , _directoryMap_removed  :: Event t (NonEmpty (DirId, v))
-  , _directoryMap_modified :: Event t (NonEmpty (DirId, v, v))
+  _directory_contents   :: Behavior t (IM.IntMap v)
+  , _directory_added    :: Event t (NonEmpty (DirId, v))
+  , _directory_removed  :: Event t (NonEmpty (DirId, v))
+  , _directory_modified :: Event t (NonEmpty (DirId, v, v))
 }
 
 data DirectoryConfig t v = DirectoryConfig {
   -- | add a element to the directory
   -- ensure the DirId was assigned from the same instance of DirectoryIdAssigner
-  _directoryMapConfig_add          :: Event t (NonEmpty (DirId, v))
+  _directoryConfig_add          :: Event t (NonEmpty (DirId, v))
   -- | remove an element from the map
-  , _directoryMapConfig_remove     :: Event t (NonEmpty DirId)
+  , _directoryConfig_remove     :: Event t (NonEmpty DirId)
   -- | modify an element in the map
-  , _directoryMapConfig_modifyWith :: Event t (NonEmpty (DirId, v->v))
+  , _directoryConfig_modifyWith :: Event t (NonEmpty (DirId, v->v))
 }
 
 
@@ -112,12 +112,12 @@ holdDirectory DirectoryConfig {..} = mdo
     -- lookup each element we are about to remove
     lookupElt :: (IM.IntMap v, NonEmpty DirId) -> [(DirId,v)]
     lookupElt (m, els) = catMaybes . toList . fmap (\i -> (\x -> (i, x)) <$> IM.lookup i m) $ els
-    removed = fmap lookupElt (attach bDirectory _directoryMapConfig_remove)
-    modified = fmap lookupElt (attach bDirectory $ (fst <<$>> _directoryMapConfig_modifyWith))
+    removed = fmap lookupElt (attach bDirectory _directoryConfig_remove)
+    modified = fmap lookupElt (attach bDirectory $ (fst <<$>> _directoryConfig_modifyWith))
     allEvs = leftmostwarn "Directory" [
-      fmap DCAdd _directoryMapConfig_add
-      , fmap DCRemove _directoryMapConfig_remove
-      , fmap DCModify _directoryMapConfig_modifyWith]
+      fmap DCAdd _directoryConfig_add
+      , fmap DCRemove _directoryConfig_remove
+      , fmap DCModify _directoryConfig_modifyWith]
 
     -- setup the directory
     addToMap els m = foldl' (\(_,accm) (i, e) -> ([],IM.insert i e accm)) m els
@@ -136,8 +136,8 @@ holdDirectory DirectoryConfig {..} = mdo
     bDirectory = current $ fmap snd directory
 
   directory :: Dynamic t ([(DirId, v,v)], IM.IntMap v) <- foldDyn foldfn ([],IM.empty) allEvs
-  return Directory { _directoryMap_contents = bDirectory
-                   , _directoryMap_added    = _directoryMapConfig_add
-                   , _directoryMap_removed  = fmapMaybe nonEmpty removed
-                   , _directoryMap_modified = fmapMaybe nonEmpty $ updated $ fmap fst directory
+  return Directory { _directory_contents = bDirectory
+                   , _directory_added    = _directoryConfig_add
+                   , _directory_removed  = fmapMaybe nonEmpty removed
+                   , _directory_modified = fmapMaybe nonEmpty $ updated $ fmap fst directory
                    }

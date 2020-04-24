@@ -50,13 +50,13 @@ basic_network ev = do
 
   let idAssignedEv = _directoryIdAssigner_tag dia neEv
       -- TODO test more stuff
-      dmc          = DirectoryConfig { _directoryMapConfig_add    = idAssignedEv
-                                     , _directoryMapConfig_remove = never
-                                     , _directoryMapConfig_modifyWith = never
+      dmc          = DirectoryConfig { _directoryConfig_add    = idAssignedEv
+                                     , _directoryConfig_remove = never
+                                     , _directoryConfig_modifyWith = never
                                      }
   dm <- holdDirectory dmc
 
-  return $ fmap last $ _directoryMap_added dm
+  return $ fmap last $ _directory_added dm
 
 test_basic_network :: Test
 test_basic_network = TestLabel "basic" $ TestCase $ do

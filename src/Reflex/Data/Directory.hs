@@ -129,9 +129,9 @@ holdDirectory DirectoryConfig {..} = mdo
         newaccc = maybe accc (\oldv -> (i,oldv,f oldv):accc) moldv
 
     foldfn :: DCmd v -> ([(DirId, v,v)], IM.IntMap v) -> ([(DirId, v,v)], IM.IntMap v)
-    foldfn (DCAdd els) m    = addToMap els m
-    foldfn (DCRemove els) m = removeFromMap els m
-    foldfn (DCModify els) m = modifyInMap els m
+    foldfn (DCAdd els) m        = addToMap els m
+    foldfn (DCRemove els) m     = removeFromMap els m
+    foldfn (DCModify els) (_,m) = modifyInMap els ([],m)
 
     bDirectory = current $ fmap snd directory
 

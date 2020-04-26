@@ -9,3 +9,8 @@ Containers in this library have multiple update events. If any of these fire sim
 PRs are very welcome.
 
 These containers were written for use in [potato-flow](https://github.com/pdlla/potato-flow) (very WIP).
+
+# TODOs
+- switch to cabal only for better compatibility with rest of reflex ecosystem
+- better documentation and examples
+- more testing

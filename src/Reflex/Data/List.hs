@@ -5,7 +5,6 @@
 --
 -- Maintainer  :  pdlla <chippermonky@gmail.com>
 -- Stability   :  experimental
--- Portability :  non-portable
 --
 -- A dynamic list which are a set of input and output events that wrap an
 -- internal 'Dynamic [a]'. Just like haskell lists, DynamicList is probably not
@@ -34,8 +33,8 @@ import           Data.List.Index
 
 data DynamicList t a = DynamicList {
   -- TODO rename to added/removed
-  _dynamicList_added        :: Event t (Int, a)
-  , _dynamicList_removed   :: Event t a
+  _dynamicList_added      :: Event t (Int, a)
+  , _dynamicList_removed  :: Event t a
   , _dynamicList_contents :: Dynamic t [a]
 }
 

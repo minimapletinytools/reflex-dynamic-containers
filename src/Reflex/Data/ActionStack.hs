@@ -5,7 +5,6 @@
 --
 -- Maintainer  :  pdlla <chippermonky@gmail.com>
 -- Stability   :  experimental
--- Portability :  non-portable
 --
 -- A dynamic structure intended for modelling action stacks for undo/redo.
 -- Internally, it is represented as two stacks: "done" and "undone".
@@ -30,13 +29,13 @@ import           Reflex.Potato.Helpers
 
 import           Control.Monad.Fix
 
-import qualified Data.Dependent.Sum            as DS
+import qualified Data.Dependent.Sum    as DS
 import qualified Data.GADT.Compare
 import           Data.Wedge
 
 data ActionStack t a = ActionStack {
-  _actionStack_do            :: Event t a -- ^ fires when element is added to do stack
-  , _actionStack_undo        :: Event t a -- ^ fires when element is added to undo stack
+  _actionStack_do     :: Event t a -- ^ fires when element is added to do stack
+  , _actionStack_undo :: Event t a -- ^ fires when element is added to undo stack
 
   -- TODO this is misleading as only the undone stack gets cleared, not the done stack
   -- TODO change it so it's only when undone gets cleared or remove this event all together
@@ -65,7 +64,6 @@ data ActionStackConfig t a = ActionStackConfig {
   _actionStackConfig_do      :: Event t a -- ^ event to add an element to the stack
   , _actionStackConfig_undo  :: Event t () -- ^ event to undo top action of do stack
   , _actionStackConfig_redo  :: Event t () -- ^ event to redo top action of undo stack
-
   , _actionStackConfig_clear :: Event t () -- ^ clears both do/undo stack without firing any do/undo events
 }
 

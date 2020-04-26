@@ -5,9 +5,9 @@
 --
 -- Maintainer  :  pdlla <chippermonky@gmail.com>
 -- Stability   :  experimental
--- Portability :  non-portable
 --
--- A dynamic stack
+-- This is the same as 'Reflex.Dynamic.List' but with a
+-- limited interface.
 ----------------------------------------------------------------------------
 
 {-# LANGUAGE RecordWildCards #-}
@@ -54,7 +54,6 @@ defaultDynamicStackConfig = DynamicStackConfig
 -- helper type for holdDynamicStack
 data DSCmd t a = DSCPush a | DSCPop | DSCClear
 
--- TODO implement this using DynamicList
 -- | create a dynamic list
 holdDynamicStack
   :: forall t m a

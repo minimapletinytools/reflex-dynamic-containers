@@ -5,7 +5,6 @@
 --
 -- Maintainer  :  pdlla <chippermonky@gmail.com>
 -- Stability   :  experimental
--- Portability :  non-portable
 --
 -- A dynamic seq which are a set of input and output events that wrap an
 -- internal 'Dynamic (Seq a)'.
@@ -22,20 +21,17 @@ module Reflex.Data.Sequence
   )
 where
 
-import           Relude                  hiding ( empty
-                                                , splitAt
-                                                )
+import           Relude                hiding (empty, splitAt)
 
 import           Reflex
 import           Reflex.Potato.Helpers
 
 import           Control.Monad.Fix
 
-import           Data.Sequence                 as Seq
+import           Data.Sequence         as Seq
 import           Data.Wedge
 
 
--- TODO make a simple variant of this that only supports adding one at a time
 data DynamicSeq t a = DynamicSeq {
   -- | index and sub sequence that was just added
   _dynamicSeq_inserted   :: Event t (Int, Seq a)

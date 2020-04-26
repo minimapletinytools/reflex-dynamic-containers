@@ -21,13 +21,12 @@ import           Reflex
 
 import           Control.Monad.Fix
 
-import qualified Data.Dependent.Map            as DM
-import qualified Data.Dependent.Sum            as DS
+import qualified Data.Dependent.Map as DM
+import qualified Data.Dependent.Sum as DS
 import           Data.Wedge
 
 
 
--- TODO rename leftmostWarn
 -- | same as leftmost but outputs a warning if more than one event fires at once
 leftmostwarn :: (Reflex t) => String -> [Event t a] -> Event t a
 leftmostwarn label evs = r where

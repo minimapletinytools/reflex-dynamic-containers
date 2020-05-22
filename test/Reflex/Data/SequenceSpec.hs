@@ -27,7 +27,7 @@ data SeqCmd a = SCInsert (Int, [a]) | SCRemove (Int, Int) | SCClear deriving (Eq
 seq_network
   :: forall t m a
    . (t ~ SpiderTimeline Global, m ~ SpiderHost Global)
-  => (Event t (SeqCmd a) -> PerformEventT t m (Event t (Seq a)))
+  => (Event t (SeqCmd a) -> TestGuestT t m (Event t (Seq a)))
 seq_network ev = do
   let insertEv = flip fmapMaybe ev $ \case
         SCInsert (i, a) -> Just (i, fromList a)

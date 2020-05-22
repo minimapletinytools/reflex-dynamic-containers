@@ -27,7 +27,7 @@ simple_state_network
   => (a -> s -> s) -- ^ do/redo method to transform state
   -> (a -> s -> s) -- ^ undo method to transform state
   -> s -- ^ initial state
-  -> (Event t (TestCmd a) -> PerformEventT t m (Event t s)) -- ^ test app producing final state
+  -> (Event t (TestCmd a) -> TestGuestT t m (Event t s)) -- ^ test app producing final state
 simple_state_network fdo fundo initial ev = do
   let pushEv = flip fmapMaybe ev $ \case
         TCPush n -> Just n
@@ -63,7 +63,7 @@ adder_test = TestLabel "adder app" $ TestCase $ do
 clear_test_network
   :: forall t m
    . (t ~ SpiderTimeline Global, m ~ SpiderHost Global)
-  => (Event t (TestCmd Int) -> PerformEventT t m (Event t [Int]))
+  => (Event t (TestCmd Int) -> TestGuestT t m (Event t [Int]))
 clear_test_network ev = do
   let pushEv = flip fmapMaybe ev $ \case
         TCPush n -> Just n
@@ -95,7 +95,7 @@ clear_test = TestLabel "clear" $ TestCase $ do
 basic_test_network
   :: forall t m
    . (t ~ SpiderTimeline Global, m ~ SpiderHost Global)
-  => (Event t (Either Int ()) -> PerformEventT t m (Event t [Int]))
+  => (Event t (Either Int ()) -> TestGuestT t m (Event t [Int]))
 basic_test_network ev = do
   let pushEv = fmapMaybe getLeft ev
       popEv  = fmapMaybe getRight ev

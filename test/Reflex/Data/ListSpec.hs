@@ -23,7 +23,7 @@ import           Reflex.Test.Host
 pushAdd_network
   :: forall t m
    . (t ~ SpiderTimeline Global, m ~ SpiderHost Global)
-  => (Event t Int -> PerformEventT t m (Event t [Int]))
+  => (Event t Int -> TestGuestT t m (Event t [Int]))
 pushAdd_network ev = mdo
   let
     -- element in the list is a dynamic int that adds to itself each new element added to the list
@@ -62,7 +62,7 @@ pushAdd_test = TestLabel "pushAdd" $ TestCase $ do
 push_enqueue_pop_dequeue_network
   :: forall t m
    . (t ~ SpiderTimeline Global, m ~ SpiderHost Global)
-  => (Event t Int -> PerformEventT t m (Event t [Int]))
+  => (Event t Int -> TestGuestT t m (Event t [Int]))
 push_enqueue_pop_dequeue_network ev = do
   let
     mdl = defaultDynamicListConfig
@@ -96,7 +96,7 @@ push_enqueue_pop_dequeue_test =
 add_network
   :: forall t m
    . (t ~ SpiderTimeline Global, m ~ SpiderHost Global)
-  => (Event t Int -> PerformEventT t m (Event t [Int]))
+  => (Event t Int -> TestGuestT t m (Event t [Int]))
 add_network ev = do
   let mdl = defaultDynamicListConfig
         { _dynamicListConfig_add = (fmap (\x -> (0, x)) ev)

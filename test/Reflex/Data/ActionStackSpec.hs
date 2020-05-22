@@ -8,11 +8,10 @@ where
 import           Relude
 
 import           Test.Hspec
-import           Test.Hspec.Contrib.HUnit       ( fromHUnitTest )
+import           Test.Hspec.Contrib.HUnit (fromHUnitTest)
 import           Test.HUnit
 
-import qualified Data.List                     as L
-                                                ( last )
+import qualified Data.List                as L (last)
 
 import           Reflex
 import           Reflex.Data.ActionStack
@@ -27,7 +26,7 @@ simple_state_network
   => (a -> s -> s) -- ^ do/redo method to transform state
   -> (a -> s -> s) -- ^ undo method to transform state
   -> s -- ^ initial state
-  -> (Event t (TestCmd a) -> PerformEventT t m (Event t s)) -- ^ test app producing final state
+  -> (Event t (TestCmd a) -> TestGuestT t m (Event t s)) -- ^ test app producing final state
 simple_state_network fdo fundo initial ev = do
   let doEv = flip fmapMaybe ev $ \case
         TCDo a -> Just a
